@@ -1,0 +1,62 @@
+---
+title: "How the 2019 Canadian Federal Election would have been different if 'everyone' had voted"
+author: "Cao Boyu"
+thanks: "Code and data are available at: https://github.com/Xeon0312/final_report/"
+date: "`r format(Sys.time(), '%d %B %Y')`"
+output: pdf_document
+fontsize: 12pt
+sansfont: Calibri Light
+bibliography: references.bib
+abstract: |
+  In this paper, we develop two models with the purpose of forecasting how the 
+  2019 Canadian Federal Election would have been different if 'everyone' had 
+  voted. Multilevel regression with postratification (MRP) and Stacked 
+  regression with postratification models where constructed using the 2019 
+  Canadian Election Study survey and postsratified using the 2016 Canadian 
+  Education Highlight Tables census dataset. We concluded that if "everyone" 
+  votes, there is a high probability that there is no obvious difference
+  
+  **Keywords:** Forecasting; 2019 Canadian Federal Election; Multilevel Regression with Poststratification; No different
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+
+library(cesR)
+library(labelled)
+library(tidyverse)
+
+ces2019_web <- read.csv("ces2019_web.csv")
+```
+# 1 Introduction
+The 2019 Canadian federal election (formally the 43rd Canadian general election) was held on October 21, 2019, to elect members of the House of Commons to the 43rd Canadian Parliament. The Liberal Party, led by incumbent Prime Minister Justin Trudeau, won 157 seats to form a minority government and lost the majority they had won in the 2015 election. The Liberals lost the popular vote to the Conservatives, which marks only the second time in Canadian history that a governing party formed a government while receiving less than 35 per cent of the national popular vote.The Conservative Party, led by Andrew Scheer, won 121 seats and remained the Official Opposition. The Bloc Québécois, under Yves-François Blanchet, won 32 seats to regain official party status and became the third party for the first time since 2008. The New Democratic Party, led by Jagmeet Singh, won 24 seats, its worst result since 2004. The Green Party, led by Elizabeth May, saw its best election results with three seats and for the first time received over one million votes.
+
+However, the gap between the Conservative Party and the Liberal Party is not very large. When voters vote, they may be affected by other conditions that may cause some voters to absent or abstain. The final result may still be somewhat different from the real public opinion. This time, we use multilevel regression with postratification (MRP) and Stacked regression with postratification models to simulate the answer if 'everyone' had voted. For the data part, we are going to use 2019 Canadian Election Study survey and postsratified using the 2016 Canadian Education Highlight census dataset. Details will be in the Model section.
+
+After a series of simulation experiments, we found that although the proportion of votes among the parties has changed, the overall result is the same as before. The Liberal Party is still elected by a narrow margin. This reflects that the public opinion of Canadian voters has been truly reflected and has not been affected by other factors.
+
+# 2 Data
+
+```{r}
+head(ces2019_web$cps19_citizenship)
+```
+
+# 3 Model
+
+# 4 Results
+
+# 5 Discussion
+
+\pagebreak
+
+# Appendix
+
+\pagebreak
+
+# References
+
+- Stephenson, Laura B; Harell, Allison; Rubenson, Daniel; Loewen, Peter John, 2020, '2019 Canadian Election Study - Online Survey', https://doi.org/10.7910/DVN/DUS88V, Harvard Dataverse, V1
+
+- Stephenson, Laura, Allison Harrel, Daniel Rubenson and Peter Loewen. Forthcoming. 'Measuring Preferences and Behaviour in the 2019 Canadian Election Study,' Canadian Journal of Political Science.
+
+LINK: https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/DUS88V
