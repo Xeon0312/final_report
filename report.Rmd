@@ -26,7 +26,7 @@ library(cesR)
 library(labelled)
 library(tidyverse)
 
-ces2019_web <- read.csv("ces2019_web.csv")
+ces2019_web <- read.csv("./input/ces2019_web.csv")
 ```
 # 1 Introduction
 The 2019 Canadian federal election (formally the 43rd Canadian general election) was held on October 21, 2019, to elect members of the House of Commons to the 43rd Canadian Parliament. The Liberal Party, led by incumbent Prime Minister Justin Trudeau, won 157 seats to form a minority government and lost the majority they had won in the 2015 election. The Liberals lost the popular vote to the Conservatives, which marks only the second time in Canadian history that a governing party formed a government while receiving less than 35 per cent of the national popular vote.The Conservative Party, led by Andrew Scheer, won 121 seats and remained the Official Opposition. The Bloc Québécois, under Yves-François Blanchet, won 32 seats to regain official party status and became the third party for the first time since 2008. The New Democratic Party, led by Jagmeet Singh, won 24 seats, its worst result since 2004. The Green Party, led by Elizabeth May, saw its best election results with three seats and for the first time received over one million votes.

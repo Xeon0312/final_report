@@ -2,5 +2,6 @@
 .Rhistory
 .RData
 .Ruserdata
+.DS_Store
 /inst
-ces2019_web.csv
+/input
