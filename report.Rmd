@@ -26,7 +26,8 @@ library(cesR)
 library(labelled)
 library(tidyverse)
 
-ces2019_web <- read.csv("./input/ces2019_web.csv")
+ces2019_web <- read.csv("./input/ces2019_web_cleaned.csv")
+gss_2017 <- read.csv("./input/census.csv")
 ```
 # 1 Introduction
 The 2019 Canadian federal election (formally the 43rd Canadian general election) was held on October 21, 2019, to elect members of the House of Commons to the 43rd Canadian Parliament. The Liberal Party, led by incumbent Prime Minister Justin Trudeau, won 157 seats to form a minority government and lost the majority they had won in the 2015 election. The Liberals lost the popular vote to the Conservatives, which marks only the second time in Canadian history that a governing party formed a government while receiving less than 35 per cent of the national popular vote.The Conservative Party, led by Andrew Scheer, won 121 seats and remained the Official Opposition. The Bloc Québécois, under Yves-François Blanchet, won 32 seats to regain official party status and became the third party for the first time since 2008. The New Democratic Party, led by Jagmeet Singh, won 24 seats, its worst result since 2004. The Green Party, led by Elizabeth May, saw its best election results with three seats and for the first time received over one million votes.
@@ -36,9 +37,25 @@ However, the gap between the Conservative Party and the Liberal Party is not ver
 After a series of simulation experiments, we found that although the proportion of votes among the parties has changed, the overall result is the same as before. The Liberal Party is still elected by a narrow margin. This reflects that the public opinion of Canadian voters has been truly reflected and has not been affected by other factors.
 
 # 2 Data
+## GSS Data
+The dataset we used for our analysis came from responses to the "2017 General Social Survey (GSS): Families Cycle 31". The 2017 GSS, conducted from February 2nd to November 30th, 2017, is a sample survey with a cross-sectional design. The target population includes all non-institutionalized persons 15 years of age and older, living in the 10 provinces of Canada. The survey uses a new frame, created in 2013, that combines telephone numbers (landline and cellular) with Statistics Canada’s Address Register, and collects data via telephone. Data are subject to both sampling and non-sampling errors.
+Each record in the survey frame was assigned to a stratum within its province. A simple random sample
+without replacement of records was next performed in each stratum. The target sample size (i.e. the desired number of respondents) for the 2017 GSS was 20,000 while the actual number of respondents was 20,602.
+The survey frame was created using two different components:
+1. Lists of telephone numbers in use (both landline and cellular) available to Statistics Canada from
+various sources (telephone companies, Census of population, etc.);
+2. The Address Register (AR): List of all dwellings within the ten provinces.
+The overall response rate for the 2017 GSS was 52.4%.
+
+The target population for the 2017 GSS included all persons 15 years of age and older in Canada,
+excluding:
+1. Residents of the Yukon, Northwest Territories, and Nunavut; and
+2. Full-time residents of institutions.
+That will cause some data missing.
+
 
 ```{r}
-head(ces2019_web$cps19_citizenship)
+ggplot(data = ces2019_web, aes(x= cps19_votechoice, fill = sex)) + geom_bar() + coord_flip()
 ```
 
 # 3 Model
