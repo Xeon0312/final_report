@@ -76,7 +76,11 @@ ces2019_web_cleaned_1 <- rename(ces2019_web_cleaned_1,education=educd2)
 
 ces2019_web_cleaned_1$sex<-ifelse(ces2019_web_cleaned_1$sex=="A woman","Female","Male")
 
+ces2019_web_cleaned_1$cps19_votechoice = as.character(ces2019_web_cleaned_1$cps19_votechoice)
+ces2019_web_cleaned_1 = ces2019_web_cleaned_1 %>% filter(cps19_votechoice != "Another party (please specify)")
+
 write_csv(ces2019_web_cleaned_1, "./input/ces2019_web_cleaned.csv")
+
 ces2019_web_cleaned_1$citizenship_status = as.factor(ces2019_web_cleaned_1$citizenship_status)
 ces2019_web_cleaned_1$agegroup = as.factor(ces2019_web_cleaned_1$agegroup)
 ces2019_web_cleaned_1$sex = as.factor(ces2019_web_cleaned_1$sex)
@@ -84,6 +88,7 @@ ces2019_web_cleaned_1$province = as.factor(ces2019_web_cleaned_1$province)
 ces2019_web_cleaned_1$education = as.factor(ces2019_web_cleaned_1$education)
 ces2019_web_cleaned_1$cps19_votechoice = as.factor(ces2019_web_cleaned_1$cps19_votechoice)
 ces2019_web_cleaned_1$vote = as.factor(ces2019_web_cleaned_1$vote)
+
 model1 = lm(cps19_votechoice ~ citizenship_status + agegroup + sex + province + education,ces2019_web_cleaned_1)
 ces2019_web = ces2019_web %>% na.omit()
 model_states <- brm(vote ~ agegroup + sex + province + education,

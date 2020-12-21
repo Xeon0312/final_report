@@ -5,3 +5,5 @@
 .DS_Store
 /inst
 /input
+/report_files
+report.tex

@@ -1,0 +1,267 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+  12pt,
+]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+  \setsansfont[]{Calibri Light}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdftitle={How the 2019 Canadian Federal Election would have been different if `everyone' had voted},
+  pdfauthor={Cao Boyu},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\usepackage{float}
+\floatplacement{figure}{H}
+
+\title{How the 2019 Canadian Federal Election would have been different if
+`everyone' had voted\thanks{Code and data are available at:
+\url{https://github.com/Xeon0312/final_report/}}}
+\author{Cao Boyu}
+\date{21 December 2020}
+
+\begin{document}
+\maketitle
+\begin{abstract}
+In this paper, we develop two models with the purpose of forecasting how
+the 2019 Canadian Federal Election would have been different if
+`everyone' had voted. Multilevel regression with postratification (MRP)
+and Stacked regression with postratification models where constructed
+using the 2019 Canadian Election Study survey and postsratified using
+the 2016 Canadian Education Highlight Tables census dataset. We
+concluded that if ``everyone'' votes, there is a high probability that
+there is no obvious difference
+
+\textbf{Keywords:} Forecasting; 2019 Canadian Federal Election;
+Multilevel Regression with Poststratification; No different
+\end{abstract}
+
+\hypertarget{introduction}{%
+\section{1 Introduction}\label{introduction}}
+
+The 2019 Canadian federal election (formally the 43rd Canadian general
+election) was held on October 21, 2019, to elect members of the House of
+Commons to the 43rd Canadian Parliament. The Liberal Party, led by
+incumbent Prime Minister Justin Trudeau, won 157 seats to form a
+minority government and lost the majority they had won in the 2015
+election. The Liberals lost the popular vote to the Conservatives, which
+marks only the second time in Canadian history that a governing party
+formed a government while receiving less than 35 per cent of the
+national popular vote.The Conservative Party, led by Andrew Scheer, won
+121 seats and remained the Official Opposition. The Bloc Québécois,
+under Yves-François Blanchet, won 32 seats to regain official party
+status and became the third party for the first time since 2008. The New
+Democratic Party, led by Jagmeet Singh, won 24 seats, its worst result
+since 2004. The Green Party, led by Elizabeth May, saw its best election
+results with three seats and for the first time received over one
+million votes.
+
+However, the gap between the Conservative Party and the Liberal Party is
+not very large. When voters vote, they may be affected by other
+conditions that may cause some voters to absent or abstain. The final
+result may still be somewhat different from the real public opinion.
+This time, we use multilevel regression with postratification (MRP) and
+Stacked regression with postratification models to simulate the answer
+if `everyone' had voted. For the data part, we are going to use 2019
+Canadian Election Study survey and postsratified using the 2016 Canadian
+Education Highlight census dataset. Details will be in the Model
+section.
+
+After a series of simulation experiments, we found that although the
+proportion of votes among the parties has changed, the overall result is
+the same as before. The Liberal Party is still elected by a narrow
+margin. This reflects that the public opinion of Canadian voters has
+been truly reflected and has not been affected by other factors.
+
+\hypertarget{data}{%
+\section{2 Data}\label{data}}
+
+\hypertarget{ces}{%
+\subsection{2019 CES}\label{ces}}
+
+\begin{figure}
+\includegraphics{report_files/figure-latex/makeGraph1-1} \caption{Party Voted in CES2019 survey}\label{fig:makeGraph1}
+\end{figure}
+
+As can be seen, The Liberal Party and the Conservative Party are the two
+most mainstream parties with support ratings of 34\% and 33\%
+respectively. NDP and Green Party ranked third and fourth with 16\% and
+9\% respectively
+
+\begin{figure}
+\includegraphics{report_files/figure-latex/makeGraph2-1} \caption{How Respondents Plan to Vote in 2019 By Gender}\label{fig:makeGraph2}
+\end{figure}
+
+It can be seen from the figure that the proportion of men and women in
+the voting population is similar, with slightly more women. Women
+accounted for the majority of votes obtained by NDP.
+
+\begin{figure}
+\includegraphics{report_files/figure-latex/makeGraph3-1} \caption{How Respondents Plan to Vote in 2019 By Province}\label{fig:makeGraph3}
+\end{figure}
+
+It can be concluded from the figure that the proportion of people in
+Ontario who voted is higher. Interestingly, the votes of the Bloc
+Quebecois party only come from Quebec.
+
+\begin{figure}
+\includegraphics{report_files/figure-latex/makeGraph4-1} \caption{How Respondents Plan to Vote in 2019 By education}\label{fig:makeGraph4}
+\end{figure}
+
+The data obtained from the graph shows that most of the voting
+population has higher education than high school. Those who voted for
+the Conservative Party had an average education level higher than those
+who voted for the Liberal Party.
+
+\hypertarget{gss-data}{%
+\subsection{GSS Data}\label{gss-data}}
+
+The dataset we used for our analysis came from responses to the ``2017
+General Social Survey (GSS): Families Cycle 31''. The 2017 GSS,
+conducted from February 2nd to November 30th, 2017, is a sample survey
+with a cross-sectional design. The target population includes all
+non-institutionalized persons 15 years of age and older, living in the
+10 provinces of Canada. The survey uses a new frame, created in 2013,
+that combines telephone numbers (landline and cellular) with Statistics
+Canada's Address Register, and collects data via telephone. Data are
+subject to both sampling and non-sampling errors. Each record in the
+survey frame was assigned to a stratum within its province. A simple
+random sample without replacement of records was next performed in each
+stratum. The target sample size (i.e.~the desired number of respondents)
+for the 2017 GSS was 20,000 while the actual number of respondents was
+20,602. The survey frame was created using two different components: 1.
+Lists of telephone numbers in use (both landline and cellular) available
+to Statistics Canada from various sources (telephone companies, Census
+of population, etc.); 2. The Address Register (AR): List of all
+dwellings within the ten provinces. The overall response rate for the
+2017 GSS was 52.4\%.
+
+The target population for the 2017 GSS included all persons 15 years of
+age and older in Canada, excluding: 1. Residents of the Yukon, Northwest
+Territories, and Nunavut; and 2. Full-time residents of institutions.
+That will cause some data missing.
+
+\begin{figure}
+\includegraphics{report_files/figure-latex/makeGraph5-1} \caption{GSS By Sex}\label{fig:makeGraph5}
+\end{figure}
+
+\begin{figure}
+\includegraphics{report_files/figure-latex/makeGraph6-1} \caption{GSS By Age group}\label{fig:makeGraph6}
+\end{figure}
+
+\begin{figure}
+\includegraphics{report_files/figure-latex/makeGraph7-1} \caption{GSS By Education}\label{fig:makeGraph7}
+\end{figure}
+
+\begin{figure}
+\includegraphics{report_files/figure-latex/makeGraph8-1} \caption{GSS By Province}\label{fig:makeGraph8}
+\end{figure}
+
+\hypertarget{model}{%
+\section{3 Model}\label{model}}
+
+\hypertarget{results}{%
+\section{4 Results}\label{results}}
+
+\begin{figure}
+\includegraphics{report_files/figure-latex/makeGraph9-1} \caption{Result of L Patry}\label{fig:makeGraph9}
+\end{figure}
+
+\begin{figure}
+\includegraphics{report_files/figure-latex/makeGraph10-1} \caption{Result of C Patry}\label{fig:makeGraph10}
+\end{figure}
+
+\begin{figure}
+\includegraphics{report_files/figure-latex/makeGraph11-1} \caption{Result of G Patry}\label{fig:makeGraph11}
+\end{figure}
+
+\begin{figure}
+\includegraphics{report_files/figure-latex/makeGraph12-1} \caption{Result of N Patry}\label{fig:makeGraph12}
+\end{figure}
+
+\begin{figure}
+\includegraphics{report_files/figure-latex/makeGraph13-1} \caption{Result of P Patry}\label{fig:makeGraph13}
+\end{figure}
+
+\begin{figure}
+\includegraphics{report_files/figure-latex/makeGraph14-1} \caption{Result of Q Patry}\label{fig:makeGraph14}
+\end{figure}
+
+\hypertarget{discussion}{%
+\section{5 Discussion}\label{discussion}}
+
+\pagebreak
+
+\hypertarget{appendix}{%
+\section{Appendix}\label{appendix}}
+
+\pagebreak
+
+\hypertarget{references}{%
+\section{References}\label{references}}
+
+\begin{itemize}
+\item
+  Stephenson, Laura B; Harell, Allison; Rubenson, Daniel; Loewen, Peter
+  John, 2020, `2019 Canadian Election Study - Online Survey',
+  \url{https://doi.org/10.7910/DVN/DUS88V}, Harvard Dataverse, V1
+\item
+  Stephenson, Laura, Allison Harrel, Daniel Rubenson and Peter Loewen.
+  Forthcoming. `Measuring Preferences and Behaviour in the 2019 Canadian
+  Election Study,' Canadian Journal of Political Science.
+\end{itemize}
+
+LINK:
+\url{https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/DUS88V}
+
+\end{document}

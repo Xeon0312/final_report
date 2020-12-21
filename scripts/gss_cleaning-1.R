@@ -363,7 +363,8 @@ gss <- gss %>%
   )) %>% na.omit()
 
 gss$education = as.character(gss$education)
-gss$education[gss$education=="College, CEGEP or other non-university certificate or di..."]<-"Trade certificate or diploma"
+gss = gss %>% filter(education != "NA")
+gss$education[gss$education=="Trade certificate or diploma"] = "College, CEGEP or other non-university certificate or di..."
 gss$education = as.factor(gss$education) 
 
 ow = c("Don't know","NA")
@@ -374,4 +375,11 @@ gss <- gss %>%
   ))
 gss$citizenship_status = as.factor(gss$citizenship)
 gss$province = as.factor(gss$province)
+
+gss <- gss %>% select(caseid,
+                      agegroup,
+                      sex,
+                      province,
+                      education)
+
 write_csv(gss, "./input/gss.csv")
