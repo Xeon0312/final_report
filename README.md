@@ -28,17 +28,16 @@ Inputs contain data that are unchanged from their original. We use two datasets:
   
   
 - *[GSS data - detail how to get the GSS data.]*
-  ## 1. Go to: http://www.chass.utoronto.ca/
-  ## 2. Data centre --> UofT users or http://dc.chass.utoronto.ca/myaccess.html
-  ## 3. Click SDA @ CHASS, should redirect to sign in. Sign in.
-  ## 4. Continue in English (you're welcome to use the French, but we probably can't
-  ## help you too much).
-  ## 5. Crtl F GSS, click
-  ## 6. Click "Data" on the one you want. We used 2017.
-  ## 7. Click download
-  ## 8. Select CSV data file, data definitions for STATA (gross, but stick with it for now).
-  ## 9. Can select all variables by clicking button next to green colored "All". Then continue.
-  ## 10. Create the files, download and save
+  1. Go to: http://www.chass.utoronto.ca/
+  2. Data centre --> UofT users or http://dc.chass.utoronto.ca/myaccess.html
+  3. Click SDA @ CHASS, should redirect to sign in. Sign in.
+  4. Continue in English (you're welcome to use the French, but we probably can't help you too much).
+  5. Crtl F GSS, click
+  6. Click "Data" on the one you want. We used 2017.
+  7. Click download
+  8. Select CSV data file, data definitions for STATA (gross, but stick with it for now).
+  9. Can select all variables by clicking button next to green colored "All". Then continue.
+  10. Create the files, download and save
 
 Outputs contain data that are modified from the input data, the report and supporting material.
 
