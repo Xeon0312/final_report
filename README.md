@@ -17,14 +17,13 @@ The sections of this repo are: inputs, outputs, scripts.
 Inputs contain data that are unchanged from their original. We use two datasets: 
 
 - *[Survey data - detail how to get the CES data.]*
-## Installation
 
-  You can install the current version of this package using:
+  1. You can install the current version of this package using:
 
-  ``` r
-  devtools::install_github("hodgettsp/cesR")
-  ```
-  Then `clean_data.R` will do the rest things.
+    ``` r
+    devtools::install_github("hodgettsp/cesR")
+    ```
+  2. Then `clean_data.R` will do the rest things.
   
   
 - *[GSS data - detail how to get the GSS data.]*
