@@ -1,8 +1,5 @@
-library(lme4)
 library(brms)
 library(tidybayes)
-library(caret)
-library(ROCR)
 library(tidyverse)
 
 brms_model_libral <- read_rds("./outputs/model/brms_model_libral.rds")

@@ -11,9 +11,9 @@ abstract: |
   2019 Canadian Federal Election would have been different if 'everyone' had 
   voted. Multilevel regression with postratification (MRP) and Stacked 
   regression with postratification models where constructed using the 2019 
-  Canadian Election Study survey and postsratified using the 2016 Canadian 
-  Education Highlight Tables census dataset. We concluded that if "everyone" 
-  votes, there is a high probability that there is no obvious difference
+  Canadian Election Study survey and postsratified using the 2017 General Social
+  Survey. We concluded that if "everyone" votes, there is a high probability 
+  that there is no obvious difference.
   
   **Keywords:** Forecasting; 2019 Canadian Federal Election; Multilevel Regression with Poststratification; No different
 header-includes: 
@@ -52,6 +52,12 @@ gss_2017 <- read.csv("./input/gss.csv")
 ```
 
 ## 2019 CES
+The 2019 Canadian Election Study was conducted to gather the attitudes and opinions of Canadians during and after the 2019 federal election. It continues the tradition of Canadian Election Studies started in 1965. There are 2 data files for the 2019 CES - online survey and phone survey. We only used online survey this time.
+The primary mandate of the Canadian Election Study is to provide a thorough account of the
+election, to underline the main reasons why people vote the way they do, to indicate what does and
+does not change during the campaign and from one election to another, and to highlight similarities
+Campaign period survey start from 2019-09-13 to 2019-10-21. The population is all people did the web
+sruvey during the period.
 
 ```{r makeGraph1, echo = FALSE, fig.cap = "Party Voted in CES2019 survey", out.extra = '',fig.width= 6, fig.height=4}
 # Overall pie chart
@@ -65,25 +71,25 @@ ces_vote_overall = ggplot(ces_vote_frame, aes(x = "Will vote to", y = count, fil
             color="black",position = position_stack(vjust = 0.5)) + guides(fill=guide_legend(title="Party Voted in CES2019 survey"))
 ces_vote_overall
 ```
-As can be seen, The Liberal Party and the Conservative Party are the two most mainstream parties with support ratings of 34% and 33% respectively. NDP and Green Party ranked third and fourth with 16% and 9% respectively
+As can be seen in Figure 1, The Liberal Party and the Conservative Party are the two most mainstream parties with support ratings of 34% and 33% respectively. NDP and Green Party ranked third and fourth with 16% and 9% respectively
 
 ```{r makeGraph2, echo = FALSE, fig.cap = "How Respondents Plan to Vote in 2019 By Gender",out.extra = '',fig.width=15, fig.height=8}
 ggplot(data = ces2019_web, aes(x= cps19_votechoice, fill = sex)) + geom_bar() + coord_flip()
 ```
 
-It can be seen from the figure that the proportion of men and women in the voting population is similar, with slightly more women. Women accounted for the majority of votes obtained by NDP.
+It can be seen from the Figure 2 that the proportion of men and women in the voting population is similar, with slightly more women. Women accounted for the majority of votes obtained by NDP.
 
 ```{r makeGraph3, echo = FALSE, fig.cap = "How Respondents Plan to Vote in 2019 By Province",out.extra = '',fig.width=15, fig.height=8}
 ggplot(data = ces2019_web, aes(x= cps19_votechoice, fill = province)) + geom_bar() + coord_flip()
 ```
 
-It can be concluded from the figure that the proportion of people in Ontario who voted is higher. Interestingly, the votes of the Bloc Quebecois party only come from Quebec.
+It can be concluded from the Figure 3 that the proportion of people in Ontario who voted is higher. Interestingly, the votes of the Bloc Quebecois party only come from Quebec.
 
 ```{r makeGraph4, echo = FALSE, fig.cap = "How Respondents Plan to Vote in 2019 By education",out.extra = '',fig.width=15, fig.height=8}
 ggplot(data = ces2019_web, aes(x= cps19_votechoice, fill = education)) + geom_bar() + coord_flip()
 ```
 
-The data obtained from the graph shows that most of the voting population has higher education than high school. Those who voted for the Conservative Party had an average education level higher than those who voted for the Liberal Party.
+The data obtained from the Figure 4 shows that most of the voting population has higher education than high school. Those who voted for the Conservative Party had an average education level higher than those who voted for the Liberal Party.
 
 ## GSS Data
 The dataset we used for our analysis came from responses to the "2017 General Social Survey (GSS): Families Cycle 31". The 2017 GSS, conducted from February 2nd to November 30th, 2017, is a sample survey with a cross-sectional design. The target population includes all non-institutionalized persons 15 years of age and older, living in the 10 provinces of Canada. The survey uses a new frame, created in 2013, that combines telephone numbers (landline and cellular) with Statistics Canada’s Address Register, and collects data via telephone. Data are subject to both sampling and non-sampling errors.
@@ -112,6 +118,8 @@ gss_gender = ggplot(gss_gender_frame, aes(x = "Sex", y = count, fill = sex)) +
             color="black",position = position_stack(vjust = 0.5)) + guides(fill=guide_legend(title="Sex"))
 gss_gender
 ```
+
+
 
 ```{r makeGraph6, echo = FALSE, fig.cap = "GSS By Age group", out.extra = '',fig.width= 6, fig.height=4}
 gss_age_frame <- gss_2017 %>% group_by(agegroup) %>% summarise(count = n())
@@ -152,7 +160,17 @@ gss_pro
 
 # 3 Model
 
+A Bayesian multilevel logistic model with post-stratification was used to predict the plurality for each state in the 2019 Canadian Federal Election. We used a logistic model as they can associate binary and continuous independent variables with a binary categorical response variable.
+Unlike the previous assignment, the choice was made between two parties. However, what we have to do in this homework is to make a distribution forecast among the six parties. So this time I made 6 models to predict whether they will vote for the party.
+Since the decision of whether they will vote for the party given is condensed to a binary response variable, the logistic model is well suited for our goal of predicting the winner. Linear models were unsuited for our goals as they require the response variable to be a continuous variable such as height. Our response variable was either 0 (representing not to vote for this party) or 1( representing a vote for this party), which is binary in nature.
+Through the logical model, we can express the probability "p" that an individual will vote for the selected party as a logarithmic function of various dependent variables.
+$$log(\frac{p}{1 - p}) = \beta_0 + \beta_1x_1 + \beta_2x_2 + ... + \beta_kx_k$$
 
+In our case, we will consider the following variables for the model: gender, age, education level, and province. We use them because they can match in our two data. 
+We decided to make the model multi-layered in order to group voters by province. Since voting preferences and demographic groups vary greatly in each province, we think it is appropriate to analyze multiple states separately. The most important thing is that there are three provinces in our GSS data that are missing, and we need to predict separately by province.
+$$P(\beta_0, \beta_1, …, \beta_k| y, X_1,...,X_k) \propto P(y, X_1,...,X_k|\beta_0, \beta_1, …, \beta_k) * P(\beta_0, \beta_1, …, \beta_k)$$
+We used "brm" to fit Bayesian generalized multivariate multilevel models. Then we used "add_predicted_draws" to add draws from the posterior fit. We performed 4000 simulations for each person in the GSS according to the model of the corresponding party. In each simulation, 0 or 1 was obtained, which respectively represented "will vote for the corresponding party" and "will not vote for the corresponding party". Average the simulation results to get the probability that this person will vote for the corresponding party.
+$$E({\rm votes}) \approx \frac{{\sum} \, {\rm draws}\,{*}\,{\rm vote}} {{\rm Number} \, {\rm of} \, {\rm draw}}.$$
 
 # 4 Results
 
@@ -166,19 +184,33 @@ results_Q = read_csv("./outputs/results/results_Q.csv")
 survey_data = ces2019_web %>% 
   select(province,cps19_votechoice)%>%
   table()%>%
-  as.data.frame()
+  as.data.frame()%>% 
+  filter((province != "Yukon")&
+         (province != "Northwest Territories")&
+         (province != "Nunavut"))
+results_C$cps19_votechoice = "Conservative Party"
+results_G$cps19_votechoice = "Green Party"
+results_L$cps19_votechoice = "Liberal Party"
+results_N$cps19_votechoice = "ndp"
+results_P$cps19_votechoice = "People's Party"
+results_Q$cps19_votechoice = "Bloc Québécois"
+
+predict_data = rbind(results_C,results_G,results_L,results_N,results_P,results_Q)
+
+observe_use = merge(survey_data,predict_data,by=c("province","cps19_votechoice"))
 
 ```
 
-```{r makeGraph9, echo = FALSE, fig.cap = "Result of L Patry", out.extra = '',fig.width= 16, fig.height=6}
+```{r makeGraph9, echo = FALSE, fig.cap = "Result of Liberal Patry", out.extra = '',fig.width= 16, fig.height=6}
 Province = results_L$province
 Province[5] = "Newfoundland"
 ggplot(results_L,aes(x=Province,y=mean,label = mean, fill = Province))+
   geom_bar(stat = "identity")+
   geom_text(size = 3, position = position_stack(vjust = 0.5))
+
 ```
 
-```{r makeGraph10, echo = FALSE, fig.cap = "Result of C Patry", out.extra = '',fig.width= 16, fig.height=6}
+```{r makeGraph10, echo = FALSE, fig.cap = "Result of Conservative Patry", out.extra = '',fig.width= 16, fig.height=6}
 Province = results_C$province
 Province[5] = "Newfoundland"
 ggplot(results_C,aes(x=Province,y=mean,label = mean, fill = Province))+
@@ -186,7 +218,7 @@ ggplot(results_C,aes(x=Province,y=mean,label = mean, fill = Province))+
   geom_text(size = 3, position = position_stack(vjust = 0.5))
 ```
 
-```{r makeGraph11, echo = FALSE, fig.cap = "Result of G Patry", out.extra = '',fig.width= 16, fig.height=6}
+```{r makeGraph11, echo = FALSE, fig.cap = "Result of Green Patry", out.extra = '',fig.width= 16, fig.height=6}
 Province = results_G$province
 Province[5] = "Newfoundland"
 ggplot(results_G,aes(x=Province,y=mean,label = mean, fill = Province))+
@@ -194,7 +226,7 @@ ggplot(results_G,aes(x=Province,y=mean,label = mean, fill = Province))+
   geom_text(size = 3, position = position_stack(vjust = 0.5))
 ```
 
-```{r makeGraph12, echo = FALSE, fig.cap = "Result of N Patry", out.extra = '',fig.width= 16, fig.height=6}
+```{r makeGraph12, echo = FALSE, fig.cap = "Result of ndp Patry", out.extra = '',fig.width= 16, fig.height=6}
 Province = results_N$province
 Province[5] = "Newfoundland"
 ggplot(results_N,aes(x=Province,y=mean,label = mean, fill = Province))+
@@ -203,7 +235,7 @@ ggplot(results_N,aes(x=Province,y=mean,label = mean, fill = Province))+
 ```
 
 
-```{r makeGraph13, echo = FALSE, fig.cap = "Result of P Patry", out.extra = '',fig.width= 16, fig.height=6}
+```{r makeGraph13, echo = FALSE, fig.cap = "Result of People's Patry", out.extra = '',fig.width= 16, fig.height=6}
 Province = results_P$province
 Province[5] = "Newfoundland"
 ggplot(results_P,aes(x=Province,y=mean,label = mean, fill = Province))+
@@ -211,14 +243,42 @@ ggplot(results_P,aes(x=Province,y=mean,label = mean, fill = Province))+
   geom_text(size = 3, position = position_stack(vjust = 0.5))
 ```
 
-
-```{r makeGraph14, echo = FALSE, fig.cap = "Result of Q Patry", out.extra = '',fig.width= 16, fig.height=6}
+```{r makeGraph14, echo = FALSE, fig.cap = "Result of Bloc Québécois", out.extra = '',fig.width= 16, fig.height=6}
 Province = results_Q$province
 Province[5] = "Newfoundland"
 ggplot(results_Q,aes(x=Province,y=mean,label = mean, fill = Province))+
   geom_bar(stat = "identity")+
   geom_text(size = 3, position = position_stack(vjust = 0.5))
 ```
+
+
+```{r makeGraph15, echo = FALSE, fig.cap = "Result of Green Patry", out.extra = '',fig.width= 16, fig.height=6}
+Province = results_G$province
+Province[5] = "Newfoundland"
+ggplot(results_G,aes(x=Province,y=mean,label = mean, fill = Province))+
+  geom_bar(stat = "identity")+
+  geom_text(size = 3, position = position_stack(vjust = 0.5))
+```
+As can be seen from Figure 9 to Figure 15.
+
+Alberta voted 1095.92 for the Conservative Party, far more than the number of votes Alberta voted for other parties. Voting in British Columbia is more scattered, with the most people voting for the Conservative Party with 810.38 votes, followed by the Liberal Party with 744.26 votes. Manitoba and Saskatchewan have the highest approval ratings for the Conservatives, which won 514.38 and 333.51 respectively.
+
+New Brunswick, Newfoundland, Nova Scotia, Ontario, and Prince Edward Island have the most support for the Liberal Party. Among them, Ontario contributed 2095.5535 votes to the Liberal Party, Nova Scotia was 615.53575, Newfoundland was 503.899, New Brunswick was 483.23125, and Prince Edward Island voted 283.5632.
+
+It is worth mentioning that the Quebec Party, all of their votes are from Quebec, which is 1015.7825. However, the Liberal Party received 1,292.01225 votes, making it the most supported party in Quebec by a narrow margin.
+```{r makeGraph16, echo = FALSE, fig.cap = "Over all predict", out.extra = '',fig.width= 8, fig.height=6}
+predict_frame <- predict_data %>% group_by(cps19_votechoice) %>% summarise(count = sum(mean))
+total = sum(predict_frame$count)
+predict_pie = ggplot(predict_frame, aes(x = "vote", y = count, fill = cps19_votechoice)) + 
+  theme_void() +
+  geom_bar(width = 2, stat = "identity") + 
+  coord_polar("y", start=0) + 
+  geom_text(aes(label = paste0(round(count/total*100), "%")), 
+            color="black",position = position_stack(vjust = 0.5)) + guides(fill=guide_legend(title="vote"))
+predict_pie
+
+```
+
 # 5 Discussion
 
 \pagebreak
@@ -229,8 +289,26 @@ ggplot(results_Q,aes(x=Province,y=mean,label = mean, fill = Province))+
 
 # References
 
-- Stephenson, Laura B; Harell, Allison; Rubenson, Daniel; Loewen, Peter John, 2020, '2019 Canadian Election Study - Online Survey', https://doi.org/10.7910/DVN/DUS88V, Harvard Dataverse, V1
+Bürkner, P (2017). brms: An R Package for Bayesian Multilevel Models Using Stan. Journal of Statistical Software, 80(1), 1-28. doi:10.18637/jss.v080.i01 
 
-- Stephenson, Laura, Allison Harrel, Daniel Rubenson and Peter Loewen. Forthcoming. 'Measuring Preferences and Behaviour in the 2019 Canadian Election Study,' Canadian Journal of Political Science.
+Bürkner, P (2018). Advanced Bayesian Multilevel Modeling with the R Package brms. The R Journal, 10(1), 395-411. doi:10.32614/RJ-2018-017
 
-LINK: https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/DUS88V
+Gelman, A., & Kennedy, L. (2020). “Know your population and know your model: Using model-based regression and post-stratification to generalize findings beyond the observed sample.” Retrieved from: https://arxiv.org/pdf/1906.11323.pdf  
+
+JJ Allaire et al. (2020). rmarkdown: Dynamic Documents for R. R package version 2.3. Retrieved from:   https://rmarkdown.rstudio.com.
+
+R Core Team. (2020). R: A language and environment for statistical computing. R Foundation for Statistical Computing, Vienna, Austria. Retrieved from: https://www.R-project.org/.
+
+Robinson, D., Hayes, A., & Couch, S. (2020). broom: Convert Statistical Objects into Tidy Tibbles. R Package version 0.7.0 Retrieved from: https://CRAN.R-project.org/package=broom. 
+
+Rudis, B. (2020). statebins: Create United States Uniform Cartogram Heatmaps. R package version 1.4.0. Retrieved from:  https://CRAN.R-project.org/package=statebins.
+
+Stephenson, Laura B; Harell, Allison; Rubenson, Daniel; Loewen, Peter John, (2020) '2019 Canadian Election Study - Online Survey', https://doi.org/10.7910/DVN/DUS88V, Harvard Dataverse, V1
+
+Wickham, H. (2016). ggplot2: Elegant Graphics for Data Analysis. Springer-Verlag. New York.
+
+Wickham, H., & Miller, E. (2020). haven: Import and Export 'SPSS',  'Stata' and 'SAS' Files. R package version 2.3.1. Retrieved from: https://CRAN.R-project.org/package=haven.
+
+Wickham et al. (2019). Welcome to the tidyverse. Journal of Open Source Software, 4(43), 1686. Retrieved from: https://doi.org/10.21105/joss.01686.
+
+Wu, C., & Thompson, M. (2020). Sampling Theory and Practice, Springer.
